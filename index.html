@@ -150,39 +150,6 @@
             transform: translateY(-5px);
         }
 
-        /* NEW: Game styles */
-        .game-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-        }
-
-        .game-box {
-            background: #ff9a9e;
-            padding: 2rem;
-            border-radius: 20px;
-            text-align: center;
-        }
-
-        .falling-heart {
-            position: absolute;
-            font-size: 30px;
-            cursor: pointer;
-            animation: fall 3s linear;
-        }
-
-        #score {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -221,7 +188,7 @@
     <p>Click the heart to reveal your surprise!</p>
     <button class="heart-button" onclick="revealSurprise()">❤️</button>
     <img id="surprise-image" class="hidden revealed-image" 
-        src="https://www.dropbox.com/scl/fi/856nqm7uqmlebhiw9tzv9/IMG_5257.JPG?rlkey=05humg2zl5ay5ktm3yh48nfu1&st=1cgz96vj&dl=1" 
+        src="images/surprise-image.jpg" 
         alt="Romantic Surprise">
     
     <div id="valentine-question" class="hidden valentine-question"></div>
@@ -232,20 +199,6 @@
             <div class="gift-option" onclick="selectGift('flowers')">🌹 Romantic Roses</div>
             <div class="gift-option" onclick="selectGift('chocolate')">🍫 Luxury Chocolates</div>
             <div class="gift-option" onclick="selectGift('dinner')">🍝 Candlelit Dinner</div>
-        </div>
-    </div>
-
-    <!-- NEW: More Surprises Section -->
-    <div id="final-surprise" class="hidden">
-        <button class="heart-button" onclick="showFinalSurprise()">More Surprises? 💌</button>
-    </div>
-
-    <!-- NEW: Game Container -->
-    <div class="game-container" id="game-container">
-        <div class="game-box">
-            <h2>Catch Our Love! 💖</h2>
-            <div id="score">Hearts Caught: 0</div>
-            <button onclick="startLoveGame()">Start Game! 🎮</button>
         </div>
     </div>
 
@@ -261,10 +214,6 @@
             "I'll ask again tomorrow! 📆",
             "Error 404: 'No' not found ❌"
         ];
-
-        // NEW: Game variables
-        let score = 0;
-        let gameInterval;
 
         function createFallingElement() {
             const element = document.createElement('div');
@@ -295,7 +244,7 @@
             valentineQuestion.classList.remove('hidden');
             document.getElementById('signature').classList.remove('hidden');
 
-            new Audio("https://www.dropbox.com/scl/fi/zbvzx7qm932kqw86it3pm/You-re-The-First-The-Last-My-Everything-Edit.mp3?rlkey=iuspjjnouiimpk99x8ci450mb&st=t2jyev5l&dl=1").play()
+            new Audio("audio/romantic-song.mp3").play()
                 .catch(() => alert("Click the heart again to play music!"));
 
             setTimeout(() => {
@@ -334,7 +283,6 @@
             }
         }
 
-        // UPDATED: Gift selection function
         function selectGift(giftType) {
             const messages = {
                 flowers: "🌹 A bouquet of red roses is coming your way!",
@@ -344,48 +292,7 @@
             alert(messages[giftType]);
             document.getElementById('gift-selection').classList.add('hidden');
             document.getElementById('valentine-question').innerHTML = "Thank you my Valentine! 😍";
-            document.getElementById('final-surprise').classList.remove('hidden');
             confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
-        }
-
-        // NEW: Game functions
-        function showFinalSurprise() {
-            document.getElementById('game-container').style.display = 'flex';
-            confetti({ particleCount: 200, spread: 100 });
-        }
-
-        function startLoveGame() {
-            score = 0;
-            document.getElementById('score').textContent = 'Hearts Caught: 0';
-            document.querySelector('.game-box button').style.display = 'none';
-            gameInterval = setInterval(createGameHeart, 1000);
-        }
-
-        function createGameHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('falling-heart');
-            heart.innerHTML = '💖';
-            heart.style.left = Math.random() * 95 + '%';
-            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
-            
-            heart.onclick = () => {
-                score++;
-                document.getElementById('score').textContent = `Hearts Caught: ${score}`;
-                heart.remove();
-                if(score >= 10) {
-                    clearInterval(gameInterval);
-                    document.getElementById('game-container').innerHTML = `
-                        <div class="game-box">
-                            <h2>You've Caught My Heart Forever! 💘</h2>
-                            <p>Happy Valentine's Day, Luciana! 🌹</p>
-                            <button onclick="location.reload()">Play Again?</button>
-                        </div>
-                    `;
-                }
-            };
-
-            document.getElementById('game-container').appendChild(heart);
-            setTimeout(() => heart.remove(), 3000);
         }
     </script>
 </body>
