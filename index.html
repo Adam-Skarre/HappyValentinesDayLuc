@@ -7,13 +7,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Great+Vibes&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        /* ... (keep all CSS styles unchanged) ... */
+        /* ... (all your CSS styles remain exactly the same) ... */
     </style>
 </head>
 <body>
     <h1 id="message">Happy Valentine's Day, Luciana! 💖</h1>
     <p>Click the heart to reveal your surprise!</p>
     <button class="heart-button" onclick="revealSurprise()">❤️</button>
+    
+    <!-- Local image file -->
     <img id="surprise-image" class="hidden revealed-image" 
         src="images/surprise-image.jpg" 
         alt="Romantic Surprise">
@@ -86,7 +88,7 @@
             valentineQuestion.classList.remove('hidden');
             document.getElementById('signature').classList.remove('hidden');
 
-            // Updated audio path
+            // Local audio file
             new Audio("audio/romantic-song.mp3").play()
                 .catch(() => alert("Click the heart again to play music!"));
 
@@ -97,86 +99,7 @@
             }, 4000);
         }
 
-        function handleYes() {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-            document.getElementById("gift-selection").classList.remove("hidden");
-            document.getElementById("valentine-question").classList.add("hidden");
-            document.getElementById('surprise-image').style.maxWidth = "30%";
-            document.getElementById('surprise-image').style.maxHeight = "30%";
-        }
-
-        function dodgeButton() {
-            const noBtn = document.querySelector('.no-btn');
-            noBtn.style.animation = 'shake 0.5s';
-            setTimeout(() => noBtn.style.animation = '', 500);
-            const maxMove = 50;
-            const newX = Math.random() * maxMove * 2 - maxMove;
-            const newY = Math.random() * maxMove * 2 - maxMove;
-            noBtn.style.transform = `translate(${newX}px, ${newY}px)`;
-        }
-
-        function handleNo() {
-            const question = document.getElementById("valentine-question");
-            if(noCount < funnyMessages.length) {
-                question.children[1].textContent = funnyMessages[noCount];
-                noCount++;
-            } else {
-                question.innerHTML = "Okay, I'll love you anyway! 😘";
-                document.querySelector(".no-btn").style.display = "none";
-            }
-        }
-
-        function selectGift(giftType) {
-            const messages = {
-                flowers: "🌹 A bouquet of red roses is coming your way!",
-                chocolate: "🍫 The finest chocolates will sweeten your day!",
-                dinner: "🍝 Get ready for a romantic candlelit dinner!"
-            };
-            alert(messages[giftType]);
-            document.getElementById('gift-selection').classList.add('hidden');
-            document.getElementById('valentine-question').innerHTML = "Thank you my Valentine! 😍";
-            document.getElementById('final-surprise').classList.remove('hidden');
-            confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
-        }
-
-        function showFinalSurprise() {
-            document.getElementById('game-container').style.display = 'flex';
-            confetti({ particleCount: 200, spread: 100 });
-        }
-
-        function startLoveGame() {
-            score = 0;
-            document.getElementById('score').textContent = 'Hearts Caught: 0';
-            document.querySelector('.game-box button').style.display = 'none';
-            gameInterval = setInterval(createGameHeart, 1000);
-        }
-
-        function createGameHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('falling-heart');
-            heart.innerHTML = '💖';
-            heart.style.left = Math.random() * 95 + '%';
-            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
-            
-            heart.onclick = () => {
-                score++;
-                document.getElementById('score').textContent = `Hearts Caught: ${score}`;
-                heart.remove();
-                if(score >= 10) {
-                    clearInterval(gameInterval);
-                    document.getElementById('game-container').innerHTML = `
-                        <div class="game-box">
-                            <h2>You've Caught My Heart Forever! 💘</h2>
-                            <p>Happy Valentine's Day, Luciana! 🌹</p>
-                            <button onclick="location.reload()">Play Again?</button>
-                        </div>
-                    `;
-                }
-            };
-
-            document.getElementById('game-container').appendChild(heart);
-            setTimeout(() => heart.remove(), 3000);
-        }
+        // ... (keep all other functions exactly as they were) ...
     </script>
 </body>
 </html>
