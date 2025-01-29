@@ -268,6 +268,11 @@
         let score = 0;
         let gameInterval;
 
+        // NEW: Audio object
+        const audio = new Audio("audio/romantic-song.mp3");
+        audio.preload = "auto"; // Preload the audio file
+        audio.muted = false; // Ensure audio is not muted
+
         function createFallingElement() {
             const element = document.createElement('div');
             element.classList.add('falling-element');
@@ -300,8 +305,8 @@
 
             // Debugging: Log the audio file path
             console.log("Attempting to play audio: audio/romantic-song.mp3");
-            const audio = new Audio("audio/romantic-song.mp3");
-            audio.muted = false; // Ensure audio is not muted
+
+            // Play audio after user interaction
             audio.play()
                 .then(() => console.log("Audio is playing!")) // Success
                 .catch((error) => {
