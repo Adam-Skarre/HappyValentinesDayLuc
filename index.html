@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>A Valentine's Surprise 💖</title>
     <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Great+Vibes&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -13,9 +13,14 @@
             box-sizing: border-box;
         }
 
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
         body {
             font-family: 'Parisienne', cursive;
             height: 100vh;
+            height: -webkit-fill-available;
             overflow: hidden;
             background: linear-gradient(to bottom, #ff9a9e, #fecfef, #fe9a8b);
             color: #fff;
@@ -28,26 +33,28 @@
         }
 
         h1 {
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 8vw, 4rem);
             margin-bottom: 1rem;
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+            padding: 0 15px;
         }
 
         p {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             margin-bottom: 3rem;
             text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+            padding: 0 15px;
         }
 
         .heart-button {
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 100px;
             color: #ff6b81;
             animation: pulse 1.5s infinite;
             transition: transform 0.3s ease-in-out;
             z-index: 2;
+            font-size: clamp(60px, 15vw, 100px);
         }
 
         .heart-button:hover {
@@ -73,7 +80,7 @@
         }
 
         .valentine-question {
-            font-size: 3rem;
+            font-size: clamp(2rem, 6vw, 3rem);
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
             position: absolute;
             top: 20%;
@@ -82,6 +89,7 @@
             align-items: center;
             gap: 20px;
             z-index: 3;
+            padding: 0 15px;
         }
 
         .signature {
@@ -94,15 +102,16 @@
         }
 
         .yes-btn, .no-btn {
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 4vw, 2rem);
             padding: 15px 30px;
-            margin: 20px;
+            margin: 10px;
             border-radius: 20px;
             border: none;
             cursor: pointer;
             transition: transform 0.3s;
             font-family: 'Great Vibes', cursive;
             z-index: 4;
+            min-width: 120px;
         }
 
         .yes-btn {
@@ -213,6 +222,62 @@
                 transform: translateY(100vh);
             }
         }
+
+        @media only screen and (max-width: 767px) {
+            body {
+                justify-content: flex-start;
+                padding-top: 20vh;
+            }
+
+            .valentine-question {
+                top: 15% !important;
+                font-size: 2rem !important;
+            }
+
+            .revealed-image {
+                max-width: 90% !important;
+                max-height: 50% !important;
+                bottom: 5%;
+            }
+
+            .gift-options {
+                flex-direction: column;
+                padding: 0 20px;
+                width: 100%;
+            }
+
+            .gift-option {
+                min-width: auto;
+                width: 100%;
+                padding: 15px;
+            }
+
+            .signature {
+                bottom: 10px;
+                font-size: 1.2rem !important;
+            }
+
+            .game-box {
+                width: 90% !important;
+                padding: 1rem !important;
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            .heart-button {
+                font-size: 80px;
+            }
+
+            .yes-btn, .no-btn {
+                margin: 10px;
+                padding: 12px 20px !important;
+            }
+
+            .valentine-question {
+                top: 10% !important;
+                gap: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -261,11 +326,11 @@
 
         let score = 0;
         let gameInterval;
-
-        // NEW: Audio object
         const audio = new Audio("audio/romantic-song.mp3");
-        audio.preload = "auto"; // Preload the audio file
-        audio.muted = false; // Ensure audio is not muted
+        audio.preload = "auto";
+        audio.muted = false;
+
+        document.addEventListener('touchstart', function() {}, false);
 
         function createFallingElement() {
             const element = document.createElement('div');
@@ -280,7 +345,10 @@
         setInterval(createFallingElement, 500);
 
         function revealSurprise() {
-            console.log("Reveal Surprise function called!"); // Debugging
+            if(window.innerWidth < 768) {
+                document.body.style.justifyContent = "flex-start";
+            }
+            
             document.querySelector('.heart-button').classList.add('hidden');
             document.getElementById('message').classList.add('hidden');
             document.querySelector('p').classList.add('hidden');
@@ -297,10 +365,6 @@
             valentineQuestion.classList.remove('hidden');
             document.getElementById('signature').classList.remove('hidden');
 
-            // Debugging: Log the audio file path
-            console.log("Attempting to play audio: audio/romantic-song.mp3");
-
-            // Play audio after user interaction
             playAudio();
 
             setTimeout(() => {
@@ -310,19 +374,14 @@
             }, 4000);
         }
 
-        // NEW: Function to handle audio playback
         function playAudio() {
             audio.play()
-                .then(() => console.log("Audio is playing!")) // Success
+                .then(() => console.log("Audio playing"))
                 .catch((error) => {
-                    console.error("Error playing audio:", error); // Failure
-                    alert("Click the heart again to play music!");
-                    // Retry playback after user interaction
+                    console.error("Audio error:", error);
                     document.querySelector('.heart-button').addEventListener('click', () => {
-                        audio.play()
-                            .then(() => console.log("Audio is playing after retry!"))
-                            .catch((error) => console.error("Retry failed:", error));
-                    }, { once: true }); // Only listen for one click
+                        audio.play().catch(e => console.error("Retry failed:", e));
+                    }, { once: true });
                 });
         }
 
