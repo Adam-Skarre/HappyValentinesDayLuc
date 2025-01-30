@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Great+Vibes&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        /* Your existing CSS styles */
         * {
             margin: 0;
             padding: 0;
@@ -151,7 +150,6 @@
             transform: translateY(-5px);
         }
 
-        /* NEW: Game styles */
         .game-container {
             position: fixed;
             top: 0;
@@ -221,7 +219,6 @@
     <h1 id="message">Happy Valentine's Day, Luciana! 💖</h1>
     <p>Click the heart to reveal your surprise!</p>
     <button class="heart-button" onclick="revealSurprise()">❤️</button>
-    <!-- Changed image source -->
     <img id="surprise-image" class="hidden revealed-image" 
         src="images/surprise-image.jpg" 
         alt="Romantic Surprise">
@@ -237,12 +234,10 @@
         </div>
     </div>
 
-    <!-- NEW: More Surprises Section -->
     <div id="final-surprise" class="hidden">
         <button class="heart-button" onclick="showFinalSurprise()">More Surprises? 💌</button>
     </div>
 
-    <!-- NEW: Game Container -->
     <div class="game-container" id="game-container">
         <div class="game-box">
             <h2>Catch Our Love! 💖</h2>
@@ -264,7 +259,6 @@
             "Error 404: 'No' not found ❌"
         ];
 
-        // NEW: Game variables
         let score = 0;
         let gameInterval;
 
@@ -307,18 +301,29 @@
             console.log("Attempting to play audio: audio/romantic-song.mp3");
 
             // Play audio after user interaction
-            audio.play()
-                .then(() => console.log("Audio is playing!")) // Success
-                .catch((error) => {
-                    console.error("Error playing audio:", error); // Failure
-                    alert("Click the heart again to play music!");
-                });
+            playAudio();
 
             setTimeout(() => {
                 const surpriseImage = document.getElementById('surprise-image');
                 surpriseImage.classList.remove('hidden');
                 surpriseImage.style.opacity = 1;
             }, 4000);
+        }
+
+        // NEW: Function to handle audio playback
+        function playAudio() {
+            audio.play()
+                .then(() => console.log("Audio is playing!")) // Success
+                .catch((error) => {
+                    console.error("Error playing audio:", error); // Failure
+                    alert("Click the heart again to play music!");
+                    // Retry playback after user interaction
+                    document.querySelector('.heart-button').addEventListener('click', () => {
+                        audio.play()
+                            .then(() => console.log("Audio is playing after retry!"))
+                            .catch((error) => console.error("Retry failed:", error));
+                    }, { once: true }); // Only listen for one click
+                });
         }
 
         function handleYes() {
@@ -350,7 +355,6 @@
             }
         }
 
-        // UPDATED: Gift selection function
         function selectGift(giftType) {
             const messages = {
                 flowers: "🌹 A bouquet of red roses is coming your way!",
@@ -364,7 +368,6 @@
             confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
         }
 
-        // NEW: Game functions
         function showFinalSurprise() {
             document.getElementById('game-container').style.display = 'flex';
             confetti({ particleCount: 200, spread: 100 });
