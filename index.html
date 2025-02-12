@@ -127,6 +127,7 @@
             background: #e0e0e0;
             color: #333;
             position: relative;
+            transition: transform 0.3s ease-out;
         }
 
         .yes-btn:hover {
@@ -233,7 +234,6 @@
             }
         }
 
-        /* Mobile-specific styles */
         @media only screen and (max-width: 767px) {
             body {
                 justify-content: flex-start;
@@ -350,7 +350,6 @@
             "I'll ask again tomorrow! 📆",
             "Error 404: 'No' not found ❌"
         ];
-}
         let score = 0;
         let gameInterval;
         const audio = new Audio("audio/romantic-song.mp3");
@@ -379,7 +378,7 @@
 
             const valentineQuestion = document.getElementById('valentine-question');
             valentineQuestion.innerHTML = `
-                Will you be my Valentine, Luciana?
+                <div id="question-text">Will you be my Valentine, Luciana?</div>
                 <div id="response-buttons">
                     <button class="yes-btn" onclick="handleYes()">YES! 💐</button>
                     <button class="no-btn" onclick="handleNo()">No... 😅</button>
@@ -430,12 +429,14 @@
         }
 
         function handleNo() {
-            const question = document.getElementById("valentine-question");
+            const questionText = document.getElementById("question-text");
+            dodgeButton();
+            
             if(noCount < funnyMessages.length) {
-                question.children[1].textContent = funnyMessages[noCount];
+                questionText.textContent = funnyMessages[noCount];
                 noCount++;
             } else {
-                question.innerHTML = "Okay, I'll love you anyway! 😘";
+                questionText.innerHTML = "Okay, I'll love you anyway! 😘";
                 document.querySelector(".no-btn").style.display = "none";
             }
         }
